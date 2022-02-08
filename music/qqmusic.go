@@ -1,4 +1,4 @@
-package main
+package music
 
 import (
 	"fmt"
@@ -12,8 +12,8 @@ import (
 
 var qqapi = "https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp?g_tk=5381&uin=0&format=json&inCharset=utf-8&outCharset=utf-8¬ice=0&platform=h5&needNewCode=1&zhidaqu=1&catZhida=1&t=0&flag=1&ie=utf-8&sem=1&aggr=0&perpage=20&n=20&p=1&remoteplace=txt.mqq.all&_=1520833663464"
 
-// qqSearchList20 批量搜索qq音乐，列表 列出搜索结果 20首
-func qqSearchList20(keyword string) (string, []MSG) {
+// QQSearchList20 批量搜索qq音乐，列表 列出搜索结果 20首
+func QQSearchList20(keyword string) (string, []MSG) {
 	var lt []MSG
 	var text string
 	url := qqapi + "&w=" + url2.QueryEscape(keyword)

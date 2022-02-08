@@ -1,4 +1,4 @@
-package main
+package music
 
 import (
 	"fmt"
@@ -13,8 +13,8 @@ import (
 
 var wangyiapi = "http://s.music.163.com/search/get/?src=lofter&type=1&limit=20&offset=0&callback"
 
-// wangyisearchList 批量查询 网易云 列表
-func wangyisearchList(keyword string) (string, []MSG) {
+// WangyisearchList20 批量查询 网易云 列表
+func WangyisearchList20(keyword string) (string, []MSG) {
 	var lt []MSG
 	var text string
 	url := wangyiapi + "&s=" + url2.QueryEscape(keyword)

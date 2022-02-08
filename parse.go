@@ -7,6 +7,7 @@ import (
 	"github.com/scjtqs2/bot_adapter/coolq"
 	"github.com/scjtqs2/bot_adapter/event"
 	"github.com/scjtqs2/bot_adapter/pb/entity"
+	"github.com/scjtqs2/bot_music/music"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"strconv"
@@ -149,28 +150,28 @@ func checkKeywords(message interface{}, atqq int64, fromqq int64, cachekey strin
 		return
 	}
 	var retstr string
-	var list []MSG
+	var list []music.MSG
 	// 处理 点歌步奏，罗列搜索结果
 	if strings.HasPrefix(str, "点歌") {
 		keywords := strings.Split(str, "点歌")
 		if len(keywords) < 2 {
 			return
 		}
-		retstr, list = qqSearchList20(keywords[1])
+		retstr, list = music.QQSearchList20(keywords[1])
 	}
 	if strings.HasPrefix(str, "qq点歌") {
 		keywords := strings.Split(str, "qq点歌")
 		if len(keywords) < 2 {
 			return
 		}
-		retstr, list = qqSearchList20(keywords[1])
+		retstr, list = music.QQSearchList20(keywords[1])
 	}
 	if strings.HasPrefix(str, "网易点歌") {
 		keywords := strings.Split(str, "网易点歌")
 		if len(keywords) < 2 {
 			return
 		}
-		retstr, list = wangyisearchList(keywords[1])
+		retstr, list = music.WangyisearchList20(keywords[1])
 		log.Infof("restr:%s,list:%+v", retstr, list)
 	}
 	if retstr == "" {
