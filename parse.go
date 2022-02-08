@@ -157,22 +157,21 @@ func checkKeywords(message interface{}, atqq int64, fromqq int64, cachekey strin
 		if len(keywords) < 2 {
 			return
 		}
-		retstr, list = music.QQSearchList20(keywords[1])
+		retstr, list = music.QQSearchList20(strings.TrimSpace(keywords[1]))
 	}
 	if strings.HasPrefix(str, "qq点歌") {
 		keywords := strings.Split(str, "qq点歌")
 		if len(keywords) < 2 {
 			return
 		}
-		retstr, list = music.QQSearchList20(keywords[1])
+		retstr, list = music.QQSearchList20(strings.TrimSpace(keywords[1]))
 	}
 	if strings.HasPrefix(str, "网易点歌") {
 		keywords := strings.Split(str, "网易点歌")
 		if len(keywords) < 2 {
 			return
 		}
-		retstr, list = music.WangyisearchList20(keywords[1])
-		log.Infof("restr:%s,list:%+v", retstr, list)
+		retstr, list = music.WangyisearchList20(strings.TrimSpace(keywords[1]))
 	}
 	if retstr == "" {
 		return

@@ -26,6 +26,7 @@ func WangyisearchList20(keyword string) (string, []MSG) {
 	}
 	res, err := client.Do(req)
 	if err != nil {
+		log.Errorf("WangyisearchList20 list http err:%v", err)
 		return "", nil
 	}
 	if res != nil {
@@ -34,6 +35,7 @@ func WangyisearchList20(keyword string) (string, []MSG) {
 	}
 	r, err := io.ReadAll(res.Body)
 	if err != nil {
+		log.Errorf("WangyisearchList20 list read resp err:%v", err)
 		return "", nil
 	}
 	result := gjson.ParseBytes(r)
