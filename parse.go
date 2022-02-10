@@ -4,18 +4,21 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/scjtqs2/bot_adapter/coolq"
-	"github.com/scjtqs2/bot_adapter/event"
-	"github.com/scjtqs2/bot_adapter/pb/entity"
-	"github.com/scjtqs2/bot_music/music"
-	log "github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/scjtqs2/bot_adapter/coolq"
+	"github.com/scjtqs2/bot_adapter/event"
+	"github.com/scjtqs2/bot_adapter/pb/entity"
+	log "github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
+
+	"github.com/scjtqs2/bot_music/music"
 )
 
-const QQ_MUSIC_STATUS = "QQ_MUSIC_STATUS_"
+// QqMusicStatus 缓存
+const QqMusicStatus = "QQ_MUSIC_STATUS_"
 
 func parseMsg(data string) {
 	msg := gjson.Parse(data)
@@ -105,13 +108,13 @@ func checkKeywords(message interface{}, atqq int64, fromqq int64, cachekey strin
 		// 缓存有效 . 处理 搜索结果选择
 		if !strings.HasPrefix(str, "选") {
 			if isGroup {
-				_, _ = bot_adapter_client.SendGroupMsg(context.TODO(), &entity.SendGroupMsgReq{
+				_, _ = botAdapterClient.SendGroupMsg(context.TODO(), &entity.SendGroupMsgReq{
 					GroupId: fromqq,
 					Message: []byte("输入的选择有误，请重新选择编号"),
 				})
 				return
 			}
-			_, _ = bot_adapter_client.SendPrivateMsg(context.TODO(), &entity.SendPrivateMsgReq{
+			_, _ = botAdapterClient.SendPrivateMsg(context.TODO(), &entity.SendPrivateMsgReq{
 				UserId:  fromqq,
 				Message: []byte("输入的选择有误，请重新选择编号"),
 			})
@@ -121,13 +124,13 @@ func checkKeywords(message interface{}, atqq int64, fromqq int64, cachekey strin
 		if err != nil {
 			log.Errorf("回答选择错误，err:=%v", err)
 			if isGroup {
-				_, _ = bot_adapter_client.SendGroupMsg(context.TODO(), &entity.SendGroupMsgReq{
+				_, _ = botAdapterClient.SendGroupMsg(context.TODO(), &entity.SendGroupMsgReq{
 					GroupId: fromqq,
 					Message: []byte("输入的选择有误，请重新选择编号"),
 				})
 				return
 			}
-			_, _ = bot_adapter_client.SendPrivateMsg(context.TODO(), &entity.SendPrivateMsgReq{
+			_, _ = botAdapterClient.SendPrivateMsg(context.TODO(), &entity.SendPrivateMsgReq{
 				UserId:  fromqq,
 				Message: []byte("输入的选择有误，请重新选择编号"),
 			})
@@ -137,13 +140,13 @@ func checkKeywords(message interface{}, atqq int64, fromqq int64, cachekey strin
 		res := gjson.ParseBytes(c.Value().([]byte)).Array()[num-1]
 		text := coolq.EnMusicCode(res.Get("type").String(), res.Get("id").String())
 		if isGroup {
-			_, _ = bot_adapter_client.SendGroupMsg(context.TODO(), &entity.SendGroupMsgReq{
+			_, _ = botAdapterClient.SendGroupMsg(context.TODO(), &entity.SendGroupMsgReq{
 				GroupId: fromqq,
 				Message: []byte(text),
 			})
 			return
 		}
-		_, _ = bot_adapter_client.SendPrivateMsg(context.TODO(), &entity.SendPrivateMsgReq{
+		_, _ = botAdapterClient.SendPrivateMsg(context.TODO(), &entity.SendPrivateMsgReq{
 			UserId:  fromqq,
 			Message: []byte(text),
 		})
@@ -180,25 +183,24 @@ func checkKeywords(message interface{}, atqq int64, fromqq int64, cachekey strin
 	cache.Set(cachekey, b, time.Minute)
 	if isGroup {
 		text := fmt.Sprintf("%s %s", coolq.EnAtCode(fmt.Sprintf("%d", atqq)), retstr)
-		_, _ = bot_adapter_client.SendGroupMsg(context.TODO(), &entity.SendGroupMsgReq{
+		_, _ = botAdapterClient.SendGroupMsg(context.TODO(), &entity.SendGroupMsgReq{
 			GroupId: fromqq,
 			Message: []byte(text),
 		})
 		return
 	}
-	_, _ = bot_adapter_client.SendPrivateMsg(context.TODO(), &entity.SendPrivateMsgReq{
+	_, _ = botAdapterClient.SendPrivateMsg(context.TODO(), &entity.SendPrivateMsgReq{
 		UserId:  fromqq,
-		Message: []byte(fmt.Sprintf("%s", retstr)),
+		Message: []byte(retstr),
 	})
-	return
 }
 
 func parsePrivateMsg(req event.MessagePrivate) {
-	key := fmt.Sprintf("%s%d-%d-%d", QQ_MUSIC_STATUS, 0, req.UserID, req.SelfID)
+	key := fmt.Sprintf("%s%d-%d-%d", QqMusicStatus, 0, req.UserID, req.SelfID)
 	checkKeywords(req.Message, 0, req.Sender.UserID, key, false)
 }
 
 func parseGroup(req event.MessageGroup) {
-	key := fmt.Sprintf("%s%d-%d-%d", QQ_MUSIC_STATUS, req.GroupID, req.UserID, req.SelfID)
+	key := fmt.Sprintf("%s%d-%d-%d", QqMusicStatus, req.GroupID, req.UserID, req.SelfID)
 	checkKeywords(req.Message, req.Sender.UserID, req.GroupID, key, true)
 }

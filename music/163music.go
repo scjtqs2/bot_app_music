@@ -2,13 +2,14 @@ package music
 
 import (
 	"fmt"
-	log "github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
 	"io"
 	"net/http"
 	url2 "net/url"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
 )
 
 var wangyiapi = "http://s.music.163.com/search/get/?src=lofter&type=1&limit=20&offset=0&callback"

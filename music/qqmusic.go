@@ -1,15 +1,17 @@
+// Package music 音乐
 package music
 
 import (
 	"context"
 	"fmt"
-	log "github.com/sirupsen/logrus"
-	"github.com/tidwall/gjson"
 	"io"
 	"net"
 	"net/http"
 	url2 "net/url"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
 )
 
 var (
